@@ -2,6 +2,7 @@
 
 namespace MartinCamen\PhpFileSize\Concerns;
 
+use MartinCamen\PhpFileSize\Enums\ByteBase;
 use MartinCamen\PhpFileSize\Enums\Unit;
 
 trait HandlesFormatting
@@ -38,6 +39,40 @@ trait HandlesFormatting
     public function formatShort(array $options = []): string
     {
         return $this->forHumans(true, $options);
+    }
+
+    public function inBinaryFormat(): self
+    {
+        return $this->withTypeBaseFormat(ByteBase::Binary);
+    }
+
+    public function inDecimalFormat(): self
+    {
+        return $this->withTypeBaseFormat(ByteBase::Decimal);
+    }
+
+    public function withTypeBaseFormat(ByteBase $byteBase): self
+    {
+        $this->options->byteBase = $byteBase->value;
+
+        return $this;
+    }
+
+    public function withBinaryLabel(): self
+    {
+        return $this->withLabelStyle(ByteBase::Binary);
+    }
+
+    public function withDecimalLabel(): self
+    {
+        return $this->withLabelStyle(ByteBase::Decimal);
+    }
+
+    public function withLabelStyle(ByteBase $byteBase): self
+    {
+        $this->options->labelStyle = $byteBase->value;
+
+        return $this;
     }
 
     private function guessUnit(): Unit
