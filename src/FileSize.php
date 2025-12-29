@@ -9,9 +9,11 @@ use MartinCamen\PhpFileSize\Concerns\HandlesFormatting;
 use MartinCamen\PhpFileSize\Configuration\FileSizeOptions;
 use MartinCamen\PhpFileSize\Enums\ByteBase;
 use MartinCamen\PhpFileSize\Enums\ConfigurationOption;
+use MartinCamen\PhpFileSize\Enums\PendingOperationType;
 use MartinCamen\PhpFileSize\Enums\Unit;
 use MartinCamen\PhpFileSize\Exceptions\InvalidValueException;
 use MartinCamen\PhpFileSize\Exceptions\NegativeValueException;
+use MartinCamen\PhpFileSize\ValueObjects\PendingOperation;
 
 class FileSize
 {
@@ -22,6 +24,9 @@ class FileSize
 
     private float $bytes = 0;
     public ?FileSizeOptions $options = null;
+
+    /** @var PendingOperation[] */
+    private array $pendingOperations = [];
 
     /** @param array<string, mixed> $options */
     public function __construct(?float $bytes = null, array $options = [])
@@ -110,9 +115,10 @@ class FileSize
     public function __get(string $property): float|int
     {
         $options = $this->assertOptions();
+        $bytes = $this->resolveBytes();
 
         $unit = $this->propertyToUnit($property);
-        $value = $unit->fromBytes($this->bytes, $options->byteBase());
+        $value = $unit->fromBytes($bytes, $options->byteBase());
 
         return round($value, $options->precision);
     }
@@ -138,7 +144,52 @@ class FileSize
 
     public function getBytes(): float
     {
-        return $this->bytes;
+        return $this->resolveBytes();
+    }
+
+    public function evaluate(): self
+    {
+        if ($this->pendingOperations === []) {
+            return $this;
+        }
+
+        $bytes = $this->executePendingOperations();
+        $options = $this->assertOptions();
+
+        return new self($bytes, $options->toArray());
+    }
+
+    private function resolveBytes(): float
+    {
+        if ($this->pendingOperations === []) {
+            return $this->bytes;
+        }
+
+        return $this->executePendingOperations();
+    }
+
+    private function executePendingOperations(): float
+    {
+        $bytes = $this->bytes;
+        $options = $this->assertOptions();
+
+        foreach ($this->pendingOperations as $operation) {
+            $value = $operation->unit
+                ? $operation->unit->toBytes($operation->value, $options)
+                : $operation->value;
+
+            $bytes = $operation->type->executeCalculation($bytes, $value);
+
+            // Validate negative result after subtraction
+            if ($operation->type === PendingOperationType::Subtract
+                && $bytes < 0
+                && $options->validationThrowOnNegativeResult
+            ) {
+                throw new NegativeValueException('Subtraction resulted in negative value.');
+            }
+        }
+
+        return $bytes;
     }
 
     public function getByteBase(): ByteBase
@@ -181,13 +232,17 @@ class FileSize
     private function fromUnit(int|float $value, Unit $unit, array $options = []): self
     {
         $this->mergeOptions($options);
+        $this->validateValue($value);
 
-        $fileSizeOptions = $this->assertOptions();
+        $clone = clone $this;
 
-        return new self(
-            $unit->toBytes($value, $fileSizeOptions),
-            $fileSizeOptions->toArray(),
+        $clone->pendingOperations[] = new PendingOperation(
+            type: PendingOperationType::Set,
+            value: (float) $value,
+            unit: $unit,
         );
+
+        return $clone;
     }
 
     /** @param array<string, mixed> $options */

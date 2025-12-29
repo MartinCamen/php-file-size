@@ -104,7 +104,7 @@ describe('subtract operations', function (): void {
     });
 
     it('throws when negative results are not allowed', function (): void {
-        (new FileSize())->megabytes(1, [ConfigurationOption::ValidationThrowOnNegativeResult->value => true])->subMegabytes(2);
+        (new FileSize())->megabytes(1, [ConfigurationOption::ValidationThrowOnNegativeResult->value => true])->subMegabytes(2)->toMegabytes();
     })->throws(NegativeValueException::class);
 });
 

@@ -14,8 +14,9 @@ trait HandlesFormatting
     ): string {
         $this->mergeOptions($options);
 
-        $unit = $this->guessUnit();
-        $value = $unit->fromBytes($this->bytes, $this->options->byteBase());
+        $bytes = $this->resolveBytes();
+        $unit = $this->guessUnit($bytes);
+        $value = $unit->fromBytes($bytes, $this->options->byteBase());
 
         $formattedValue = number_format(
             round($value, $this->options->precision),
@@ -75,9 +76,9 @@ trait HandlesFormatting
         return $this;
     }
 
-    private function guessUnit(): Unit
+    private function guessUnit(float $bytes): Unit
     {
-        $absBytes = abs($this->bytes);
+        $absBytes = abs($bytes);
 
         foreach ([Unit::PetaByte, Unit::TeraByte, Unit::GigaByte, Unit::MegaByte, Unit::KiloByte] as $unit) {
             if ($absBytes >= $unit->toBytes(1, $this->options)) {

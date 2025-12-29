@@ -38,8 +38,10 @@ trait HandlesConversions
 
     private function convertTo(Unit $unit, ?int $precision = null): float
     {
+        $bytes = $this->resolveBytes();
+
         return round(
-            $unit->fromBytes($this->bytes, $this->options->byteBase()),
+            $unit->fromBytes($bytes, $this->options->byteBase()),
             $precision ?? $this->options->precision,
         );
     }

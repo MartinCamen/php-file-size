@@ -52,12 +52,12 @@ trait HandlesComparisons
 
     public function min(FileSize $other): self
     {
-        return $this->bytes <= $other->bytes ? $this : $other;
+        return $this->resolveBytes() <= $other->getBytes() ? $this : $other;
     }
 
     public function max(FileSize $other): self
     {
-        return $this->bytes >= $other->bytes ? $this : $other;
+        return $this->resolveBytes() >= $other->getBytes() ? $this : $other;
     }
 
     /** @param array<string, mixed> $options */
@@ -68,7 +68,7 @@ trait HandlesComparisons
 
     public function isPositive(): bool
     {
-        return $this->bytes > 0;
+        return $this->resolveBytes() > 0;
     }
 
     public function isNegative(): bool
@@ -81,7 +81,8 @@ trait HandlesComparisons
     {
         $this->mergeOptions($options);
 
-        $thisValue = round($this->bytes, $this->options->precision);
+        $bytes = $this->resolveBytes();
+        $thisValue = round($bytes, $this->options->precision);
         $compareValue = round($unit->toBytes($value, $this->options), $this->options->precision);
 
         return $thisValue <=> $compareValue;

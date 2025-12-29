@@ -2,37 +2,27 @@
 
 namespace MartinCamen\PhpFileSize\Concerns;
 
-use MartinCamen\PhpFileSize\Configuration\FileSizeOptions;
+use MartinCamen\PhpFileSize\Enums\PendingOperationType;
 use MartinCamen\PhpFileSize\Enums\Unit;
 use MartinCamen\PhpFileSize\Exceptions\InvalidValueException;
-use MartinCamen\PhpFileSize\Exceptions\NegativeValueException;
 use MartinCamen\PhpFileSize\FileSize;
+use MartinCamen\PhpFileSize\ValueObjects\PendingOperation;
 
 trait HandlesArithmetic
 {
     public function add(int|float $value, Unit $unit): self
     {
-        $bytes = $this->bytes + $unit->toBytes($value, $this->options);
-
-        return $this->toFileSize($bytes);
+        return $this->cloneWithPendingOperation(PendingOperationType::Add, $value, $unit);
     }
 
     public function sub(int|float $value, Unit $unit): self
     {
-        $bytes = $this->bytes - $unit->toBytes($value, $this->options);
-
-        if ($bytes < 0 && (new FileSizeOptions())->validationThrowOnNegativeResult) {
-            throw new NegativeValueException('Subtraction resulted in negative value.');
-        }
-
-        return $this->toFileSize($bytes);
+        return $this->cloneWithPendingOperation(PendingOperationType::Subtract, $value, $unit);
     }
 
     public function multiply(int|float $multiplier): self
     {
-        $bytes = $this->bytes * $multiplier;
-
-        return $this->toFileSize($bytes);
+        return $this->cloneWithPendingOperation(PendingOperationType::Multiply, $multiplier);
     }
 
     public function divide(int|float $divisor): self
@@ -41,12 +31,9 @@ trait HandlesArithmetic
             throw new InvalidValueException('Cannot divide by zero.');
         }
 
-        $bytes = $this->bytes / $divisor;
-
-        return $this->toFileSize($bytes);
+        return $this->cloneWithPendingOperation(PendingOperationType::Divide, $divisor);
     }
 
-    // Convenience methods for each unit
     public function addBytes(int|float $value): self
     {
         return $this->add($value, Unit::Byte);
@@ -107,14 +94,28 @@ trait HandlesArithmetic
         return $this->sub($value, Unit::PetaByte);
     }
 
-    // Absolute value
     public function abs(): self
     {
-        return $this->toFileSize(abs($this->bytes));
+        $bytes = abs($this->resolveBytes());
+
+        $options = $this->assertOptions();
+
+        return new FileSize($bytes, $options->toArray());
     }
 
-    public function toFileSize(float $bytes): FileSize
-    {
-        return new FileSize($bytes, $this->options->toArray());
+    private function cloneWithPendingOperation(
+        PendingOperationType $type,
+        int|float $value,
+        ?Unit $unit = null,
+    ): self {
+        $clone = clone $this;
+
+        $clone->pendingOperations[] = new PendingOperation(
+            type: $type,
+            value: (float) $value,
+            unit: $unit,
+        );
+
+        return $clone;
     }
 }

@@ -44,12 +44,15 @@ it('chains arithmetic operations with binary base', function (): void {
 });
 
 it('chains arithmetic operations with decimal base', function (): void {
-    $result = (new FileSize())->megabytes(2, [ConfigurationOption::ByteBase->value => ByteBase::Decimal])
+    $result = (new FileSize())
+        ->inDecimalFormat()
+        ->megabytes(2)
         ->subKilobytes(22)
         ->addKilobytes(8)
+        ->inBinaryFormat()
         ->toKilobytes();
 
-    expect($result)->toBe(1986.0);
+    expect($result)->toBe(2034.0);
 });
 
 it('formats for humans with binary base as default', function (): void {
