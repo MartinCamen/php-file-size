@@ -34,12 +34,12 @@
     }
   },
   "scripts": {
-    "format": "vendor/bin/pint --diff=main",
-    "format-fix": "vendor/bin/pint",
-    "analyse": "vendor/bin/phpstan analyse",
-    "test": "vendor/bin/phpunit",
-    "rector": "vendor/bin/rector process --dry-run",
-    "rector-fix": "vendor/bin/rector process",
+    "format": "./vendor/bin/pint --diff=main",
+    "format-fix": "./vendor/bin/pint",
+    "analyse": "./vendor/bin/phpstan analyse",
+    "test": "./vendor/bin/pest",
+    "rector": "./vendor/bin/rector process --dry-run",
+    "rector-fix": "./vendor/bin/rector process",
     "check": [
       "@analyse",
       "@test",
