@@ -6,6 +6,7 @@ use MartinCamen\PhpFileSize\Concerns\HandlesArithmetic;
 use MartinCamen\PhpFileSize\Concerns\HandlesComparisons;
 use MartinCamen\PhpFileSize\Concerns\HandlesConversions;
 use MartinCamen\PhpFileSize\Concerns\HandlesFormatting;
+use MartinCamen\PhpFileSize\Concerns\HandlesSyntheticInitiation;
 use MartinCamen\PhpFileSize\Configuration\FileSizeOptions;
 use MartinCamen\PhpFileSize\Enums\ByteBase;
 use MartinCamen\PhpFileSize\Enums\ConfigurationOption;
@@ -21,6 +22,7 @@ class FileSize
     use HandlesComparisons;
     use HandlesConversions;
     use HandlesFormatting;
+    use HandlesSyntheticInitiation;
 
     private float $bytes = 0;
     public ?FileSizeOptions $options = null;
