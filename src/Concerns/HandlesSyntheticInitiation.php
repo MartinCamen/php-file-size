@@ -47,7 +47,7 @@ trait HandlesSyntheticInitiation
     }
 
     /** @param array<string, mixed> $options */
-    private static function initiate(array $options = []): static
+    protected static function initiate(array $options = []): static
     {
         return new static(options: $options);
     }
