@@ -34,7 +34,7 @@
     }
   },
   "scripts": {
-    "format": "./vendor/bin/pint --diff=main",
+    "format": "./vendor/bin/pint --diff=main --test",
     "format-fix": "./vendor/bin/pint",
     "analyse": "./vendor/bin/phpstan analyse",
     "test": "./vendor/bin/pest",
