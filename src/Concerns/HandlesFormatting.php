@@ -2,12 +2,14 @@
 
 namespace MartinCamen\PhpFileSize\Concerns;
 
+use MartinCamen\PhpFileSize\Configuration\FileSizeOptions;
 use MartinCamen\PhpFileSize\Enums\ByteBase;
 use MartinCamen\PhpFileSize\Enums\Unit;
 
+/** @phpstan-import-type OptionalFileSizeOptionsType from FileSizeOptions */
 trait HandlesFormatting
 {
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function forHumans(
         bool $short = false,
         array $options = [],
@@ -30,13 +32,13 @@ trait HandlesFormatting
             . $unit->label($this->options->labelByteBase(), $short);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function format(array $options = []): string
     {
         return $this->forHumans(false, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function formatShort(array $options = []): string
     {
         return $this->forHumans(true, $options);

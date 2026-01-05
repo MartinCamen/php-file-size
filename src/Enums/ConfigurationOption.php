@@ -22,4 +22,14 @@ enum ConfigurationOption: string
 
         return mb_lcfirst($withoutSpace);
     }
+
+    public function isBooleanType(): bool
+    {
+        return match ($this) {
+            self::SpaceBetweenValueAndUnit,
+            self::ValidationThrowOnNegativeResult,
+            self::ValidationAllowNegativeInput => true,
+            default                            => false,
+        };
+    }
 }

@@ -5,6 +5,7 @@ namespace MartinCamen\PhpFileSize;
 use MartinCamen\PhpFileSize\Concerns\HandlesArithmetic;
 use MartinCamen\PhpFileSize\Concerns\HandlesComparisons;
 use MartinCamen\PhpFileSize\Concerns\HandlesConversions;
+use MartinCamen\PhpFileSize\Concerns\HandlesFileInstances;
 use MartinCamen\PhpFileSize\Concerns\HandlesFormatting;
 use MartinCamen\PhpFileSize\Concerns\HandlesSyntheticInitiation;
 use MartinCamen\PhpFileSize\Configuration\FileSizeOptions;
@@ -16,11 +17,13 @@ use MartinCamen\PhpFileSize\Exceptions\InvalidValueException;
 use MartinCamen\PhpFileSize\Exceptions\NegativeValueException;
 use MartinCamen\PhpFileSize\ValueObjects\PendingOperation;
 
+/** @phpstan-import-type OptionalFileSizeOptionsType from FileSizeOptions */
 class FileSize
 {
     use HandlesArithmetic;
     use HandlesComparisons;
     use HandlesConversions;
+    use HandlesFileInstances;
     use HandlesFormatting;
     use HandlesSyntheticInitiation;
 
@@ -30,7 +33,11 @@ class FileSize
     /** @var PendingOperation[] */
     private array $pendingOperations = [];
 
-    /** @param array<string, mixed> $options */
+    /**
+     * @param OptionalFileSizeOptionsType $options
+     *
+     * @throws NegativeValueException|NegativeValueException|InvalidValueException
+     **/
     public function __construct(?float $bytes = null, array $options = [])
     {
         $this->mergeOptions($options);
@@ -41,73 +48,73 @@ class FileSize
         }
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function bytes(int|float $value, array $options = []): self
     {
         return $this->fromUnit($value, Unit::Byte, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function kilobytes(int|float $value, array $options = []): self
     {
         return $this->fromUnit($value, Unit::KiloByte, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function megabytes(int|float $value, array $options = []): self
     {
         return $this->fromUnit($value, Unit::MegaByte, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function gigabytes(int|float $value, array $options = []): self
     {
         return $this->fromUnit($value, Unit::GigaByte, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function terabytes(int|float $value, array $options = []): self
     {
         return $this->fromUnit($value, Unit::TeraByte, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function petabytes(int|float $value, array $options = []): self
     {
         return $this->fromUnit($value, Unit::PetaByte, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function byte(array $options = []): self
     {
         return $this->bytes(1, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function kilobyte(array $options = []): self
     {
         return $this->kilobytes(1, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function megabyte(array $options = []): self
     {
         return $this->megabytes(1, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function gigabyte(array $options = []): self
     {
         return $this->gigabytes(1, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function terabyte(array $options = []): self
     {
         return $this->terabytes(1, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function petabyte(array $options = []): self
     {
         return $this->petabytes(1, $options);
@@ -230,7 +237,11 @@ class FileSize
         };
     }
 
-    /** @param array<string, mixed> $options */
+    /**
+     * @param OptionalFileSizeOptionsType $options
+     *
+     * @throws InvalidValueException|NegativeValueException
+     */
     private function fromUnit(int|float $value, Unit $unit, array $options = []): self
     {
         $this->mergeOptions($options);
@@ -247,7 +258,7 @@ class FileSize
         return $clone;
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     private function mergeOptions(array $options = []): void
     {
         $this->options = FileSizeOptions::fromArray([

@@ -2,48 +2,50 @@
 
 namespace MartinCamen\PhpFileSize\Concerns;
 
+use MartinCamen\PhpFileSize\Configuration\FileSizeOptions;
 use MartinCamen\PhpFileSize\Enums\Unit;
 use MartinCamen\PhpFileSize\FileSize;
 
+/** @phpstan-import-type OptionalFileSizeOptionsType from FileSizeOptions */
 trait HandlesComparisons
 {
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function equals(int|float $value, Unit $unit, array $options = []): bool
     {
         return $this->compare($value, $unit, $options) === 0;
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function notEquals(int|float $value, Unit $unit, array $options = []): bool
     {
         return ! $this->equals($value, $unit, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function greaterThan(int|float $value, Unit $unit, array $options = []): bool
     {
         return $this->compare($value, $unit, $options) > 0;
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function greaterThanOrEqual(int|float $value, Unit $unit, array $options = []): bool
     {
         return $this->compare($value, $unit, $options) >= 0;
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function lessThan(int|float $value, Unit $unit, array $options = []): bool
     {
         return ! $this->greaterThanOrEqual($value, $unit, $options);
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function lessThanOrEqual(int|float $value, Unit $unit, array $options = []): bool
     {
         return $this->compare($value, $unit, $options) <= 0;
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function between(int|float $min, int|float $max, Unit $unit, array $options = []): bool
     {
         return $this->greaterThanOrEqual($min, $unit, $options)
@@ -60,7 +62,7 @@ trait HandlesComparisons
         return $this->resolveBytes() >= $other->getBytes() ? $this : $other;
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     public function isZero(array $options = []): bool
     {
         return $this->equals(0, Unit::Byte, $options);
@@ -76,7 +78,7 @@ trait HandlesComparisons
         return ! $this->isPositive();
     }
 
-    /** @param array<string, mixed> $options */
+    /** @param OptionalFileSizeOptionsType $options */
     private function compare(int|float $value, Unit $unit, array $options = []): int
     {
         $this->mergeOptions($options);
