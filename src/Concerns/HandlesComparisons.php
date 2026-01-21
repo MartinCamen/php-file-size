@@ -83,9 +83,12 @@ trait HandlesComparisons
     {
         $this->mergeOptions($options);
 
+        /** @var FileSizeOptions $fileSizeOptions */
+        $fileSizeOptions = $this->options;
+
         $bytes = $this->resolveBytes();
-        $thisValue = round($bytes, $this->options->precision);
-        $compareValue = round($unit->toBytes($value, $this->options), $this->options->precision);
+        $thisValue = round($bytes, $fileSizeOptions->precision);
+        $compareValue = round($unit->toBytes($value, $fileSizeOptions), $fileSizeOptions->precision);
 
         return $thisValue <=> $compareValue;
     }

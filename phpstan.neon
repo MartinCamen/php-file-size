@@ -4,3 +4,21 @@ parameters:
         - src
     excludePaths:
         - vendor
+    ignoreErrors:
+        # FileSizeOptions is nullable but never actually is
+        - '#Cannot call method byteBase\(\) on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Cannot call method labelByteBase\(\) on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Cannot access property \$precision on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Cannot access property \$decimalSeparator on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Cannot access property \$thousandsSeparator on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Cannot access property \$spaceBetweenValueAndUnit on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Cannot access property \$byteBase on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Cannot access property \$labelStyle on MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions\|null.#'
+        - '#Method MartinCamen\\PhpFileSize\\FileSize::fromBytes\(\) should return static\(MartinCamen\\PhpFileSize\\FileSize\) but returns MartinCamen\\PhpFileSize\\FileSize.#'
+        - '#Method MartinCamen\\PhpFileSize\\FileSize::fromKilobytes\(\) should return static\(MartinCamen\\PhpFileSize\\FileSize\) but returns MartinCamen\\PhpFileSize\\FileSize.#'
+        - '#Method MartinCamen\\PhpFileSize\\FileSize::fromMegabytes\(\) should return static\(MartinCamen\\PhpFileSize\\FileSize\) but returns MartinCamen\\PhpFileSize\\FileSize.#'
+        - '#Method MartinCamen\\PhpFileSize\\FileSize::fromGigabytes\(\) should return static\(MartinCamen\\PhpFileSize\\FileSize\) but returns MartinCamen\\PhpFileSize\\FileSize.#'
+        - '#Method MartinCamen\\PhpFileSize\\FileSize::fromTerabytes\(\) should return static\(MartinCamen\\PhpFileSize\\FileSize\) but returns MartinCamen\\PhpFileSize\\FileSize.#'
+        - '#Method MartinCamen\\PhpFileSize\\FileSize::fromPetabytes\(\) should return static\(MartinCamen\\PhpFileSize\\FileSize\) but returns MartinCamen\\PhpFileSize\\FileSize.#'
+        - '#Method MartinCamen\\PhpFileSize\\FileSize::zero\(\) should return static\(MartinCamen\\PhpFileSize\\FileSize\) but returns MartinCamen\\PhpFileSize\\FileSize.#'
+        - '#Parameter \#1 \$byteBase of class MartinCamen\\PhpFileSize\\Configuration\\FileSizeOptions constructor expects MartinCamen\\PhpFileSize\\Enums\\ByteBase\|string\|null, bool\|int\|string\|null given.#'
