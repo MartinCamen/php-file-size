@@ -82,8 +82,11 @@ trait HandlesFormatting
     {
         $absBytes = abs($bytes);
 
+        /** @var FileSizeOptions $fileSizeOptions */
+        $fileSizeOptions = $this->options;
+
         foreach ([Unit::PetaByte, Unit::TeraByte, Unit::GigaByte, Unit::MegaByte, Unit::KiloByte] as $unit) {
-            if ($absBytes >= $unit->toBytes(1, $this->options)) {
+            if ($absBytes >= $unit->toBytes(1, $fileSizeOptions)) {
                 return $unit;
             }
         }

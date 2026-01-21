@@ -17,7 +17,11 @@ use MartinCamen\PhpFileSize\Exceptions\InvalidValueException;
 use MartinCamen\PhpFileSize\Exceptions\NegativeValueException;
 use MartinCamen\PhpFileSize\ValueObjects\PendingOperation;
 
-/** @phpstan-import-type OptionalFileSizeOptionsType from FileSizeOptions */
+/**
+ * @phpstan-import-type OptionalFileSizeOptionsType from FileSizeOptions
+ *
+ * @phpstan-consistent-constructor
+ */
 class FileSize
 {
     use HandlesArithmetic;

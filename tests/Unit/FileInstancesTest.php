@@ -11,7 +11,7 @@ describe('handles file instances', function (): void {
         $fileSize = FileSize::fromFile($filePath);
 
         expect($fileSize->toBytes())->toBeFloat();
-    })->throwsNoExceptions();
+    });
 
     it('throws exception for non-existent file', function (): void {
         $filePath = 'non-existing-file.md';
